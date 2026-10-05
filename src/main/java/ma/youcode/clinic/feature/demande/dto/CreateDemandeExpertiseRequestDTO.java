@@ -1,6 +1,6 @@
 package ma.youcode.clinic.feature.demande.dto;
 
-public class DemandeExpertiseRequestDTO {
+public class CreateDemandeExpertiseRequestDTO {
     private Long consultation_id;
 
     private Long specialiste_id;
