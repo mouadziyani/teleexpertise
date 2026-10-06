@@ -40,4 +40,15 @@ public class DemandeExpertise {
 
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
+
+    public DemandeExpertise(Consultation consultation, Specialiste specialiste, String question, Priorite priorite, StatutDemande statut, String avis, String recommandations, LocalDateTime dateCreation) {
+        this.consultation = consultation;
+        this.specialiste = specialiste;
+        this.question = question;
+        this.priorite = priorite;
+        this.statut = statut;
+        this.avis = avis;
+        this.recommandations = recommandations;
+        this.dateCreation = dateCreation;
+    }
 }
