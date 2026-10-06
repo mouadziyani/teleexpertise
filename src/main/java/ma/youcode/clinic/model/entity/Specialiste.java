@@ -29,7 +29,7 @@ public class Specialiste {
     private Double tarif;
 
     public Specialiste() {
-    }
+    } 
 
     public Specialiste(Long userId, Specialite specialite, Double tarif) {
         this.userId = userId;
