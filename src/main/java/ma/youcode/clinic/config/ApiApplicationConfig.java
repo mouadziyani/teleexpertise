@@ -1,8 +1,16 @@
 package ma.youcode.clinic.config;
 
 import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
+import org.glassfish.jersey.server.ResourceConfig;
 
 @ApplicationPath("/api")
-public class ApiApplicationConfig extends Application {
+public class ApiApplicationConfig extends ResourceConfig {
+
+    public ApiApplicationConfig() {
+        packages("ma.youcode.clinic");
+
+        register(new ApplicationBinder());
+        register(JacksonJsonProvider.class);
+    }
 }

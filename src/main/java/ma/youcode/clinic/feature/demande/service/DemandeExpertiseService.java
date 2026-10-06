@@ -2,7 +2,6 @@ package ma.youcode.clinic.feature.demande.service;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.transaction.Transactional;
 import ma.youcode.clinic.feature.consultation.repository.ConsultationRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
 import ma.youcode.clinic.feature.demande.repository.DemandeExpertiseRepository;
@@ -12,7 +11,6 @@ import ma.youcode.clinic.model.entity.DemandeExpertise;
 import ma.youcode.clinic.model.entity.Specialiste;
 import ma.youcode.clinic.model.enums.Priorite;
 import ma.youcode.clinic.model.enums.StatutDemande;
-import org.jvnet.hk2.annotations.Service;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
