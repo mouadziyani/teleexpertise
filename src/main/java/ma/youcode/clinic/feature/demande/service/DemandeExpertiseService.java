@@ -1,5 +1,8 @@
 package ma.youcode.clinic.feature.demande.service;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 import ma.youcode.clinic.feature.consultation.repository.ConsultationRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
 import ma.youcode.clinic.feature.demande.repository.DemandeExpertiseRepository;
@@ -15,11 +18,14 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Service
+@Singleton
 public class DemandeExpertiseService {
-    private final DemandeExpertiseRepository demandeExpertiseRepository = new DemandeExpertiseRepository();
-    private final SpecialisteRepository specialisteRepository = new SpecialisteRepository();
-    private final ConsultationRepository consultationRepository = new ConsultationRepository();
+    @Inject
+    private DemandeExpertiseRepository demandeExpertiseRepository;
+    @Inject
+    private SpecialisteRepository specialisteRepository;
+    @Inject
+    private ConsultationRepository consultationRepository;
 
     public Map<String , String> creatDemande(CreateDemandeExpertiseRequestDTO requestDTO) {
         Map<String , String> errors = validateCreateDemandeExpertise(requestDTO);
@@ -33,7 +39,7 @@ public class DemandeExpertiseService {
                     specialiste,
                     requestDTO.getQuestion(),
                     Priorite.valueOf(requestDTO.getPriorite()),
-                    StatutDemande.valueOf(requestDTO.getPriorite()),
+                    StatutDemande.EN_ATTENTE,
                     requestDTO.getAvis(),
                     requestDTO.getRecommandations(),
                     LocalDateTime.now()
