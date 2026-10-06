@@ -7,8 +7,8 @@ import jakarta.persistence.Persistence;
 public class JPAConfig {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("teleexpertise");
 
-    public static EntityManager getEntityManager() {
-        return  emf.createEntityManager();
+    public static void init() {
+        emf.createEntityManager();
     }
 
     public static void close() {
