@@ -1,33 +1,31 @@
 package ma.youcode.clinic.feature.specialiste.resource;
 
 import java.util.List;
-import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import ma.youcode.clinic.feature.specialiste.service.SpecialisteService;
 import ma.youcode.clinic.model.entity.Specialiste;
 import ma.youcode.clinic.model.enums.Specialite;
 
+@Path("/specialistes")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class SpecialisteResource {
-    @PersistenceContext
-    private EntityManager entityManager ;
+    private SpecialisteService service;
 
-    public SpecialisteResource(EntityManager entityManager){
-        this.entityManager=entityManager;
+    public SpecialisteResource(SpecialisteService service){
+        this.service=service;
     }
 
-    public List<Specialiste> findAll(){
-        return entityManager.createQuery("SELECT s FROM Specialiste s",Specialiste.class).getResultList();
-    }
-
-    public List<Specialiste> findBySpecialite(Specialite specialite) {
-            return entityManager.createQuery("SELECT s FROM Specialiste s WHERE s.specialite = :spec", Specialiste.class)
-                    .setParameter("spec", specialite)
-                    .getResultList();
-    }
-
-    public Optional<Specialiste> findById(Long id) {
-        Specialiste specialiste = entityManager.find(Specialiste.class, id);
-        return Optional.ofNullable(specialiste);
+    @GET
+    public Response listSpecialiste(@QueryParam("specialite") Specialite specialite,@QueryParam("tarif") String tarif){
+        List<Specialiste> specialistes = service.listSpesialiste(specialite, tarif);
+        return Response.ok(specialistes).build();
     }
 }
