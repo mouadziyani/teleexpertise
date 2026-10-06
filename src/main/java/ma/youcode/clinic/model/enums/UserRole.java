@@ -1,5 +1,7 @@
 package ma.youcode.clinic.model.enums;
 
-public class UserRole {
-    
+public enum UserRole {
+    NURSE,
+    GENERALIST,
+    SPECIALISTE
 }
