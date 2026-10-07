@@ -32,15 +32,10 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 
             String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
 
-            int colonIndex = credentials.indexOf(':');
+            String[] infos = credentials.split(":" , 2);
 
-            if (colonIndex == -1) {
-                abortWith401(requestContext);
-                return;
-            }
-
-            String username = credentials.substring(0, colonIndex);
-            String password = credentials.substring(colonIndex + 1);
+            String username = infos[0];
+            String password = infos[1];
 
             User user = userRepository.findByUsername(username);
 
