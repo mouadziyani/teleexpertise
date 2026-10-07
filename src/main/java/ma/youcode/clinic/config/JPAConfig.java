@@ -8,16 +8,12 @@ public class JPAConfig {
     private static EntityManagerFactory emf;
 
     public static void init() {
-        System.out.println("1 - Starting JPA initialization");
-
         try {
             emf = Persistence.createEntityManagerFactory("teleexpertise");
 
-            System.out.println("2 - JPA initialized successfully");
 
         } catch (Exception e) {
-            System.out.println("3 - ERROR initializing JPA");
-            e.printStackTrace();
+            System.err.println("Error : " + e.getMessage());
         }
     }
 

@@ -22,6 +22,12 @@ public class User {
 
     public User() {};
 
+    public User(String username, String password, UserRole role) {
+        this.username = username;
+        this.password = password;
+        Role = role;
+    }
+
     public Long getId() {
         return id;
     }
