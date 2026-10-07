@@ -49,6 +49,7 @@ public class DemandeExpertiseRepository {
                 )
                 .setParameter("specialisteId", specialisteId)
                 .getResultList();
+    }
     public DemandeExpertise findById(long id){
         return entityManager.find(DemandeExpertise.class , id);
     }
