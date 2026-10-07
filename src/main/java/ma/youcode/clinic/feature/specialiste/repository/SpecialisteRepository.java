@@ -5,15 +5,16 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import ma.youcode.clinic.config.JPAConfig;
 import ma.youcode.clinic.model.entity.Specialiste;
 import ma.youcode.clinic.model.enums.Specialite;
 
 public class SpecialisteRepository {
-        @PersistenceContext
+    @PersistenceContext
     private EntityManager entityManager ;
 
     public SpecialisteRepository(EntityManager entityManager){
-        this.entityManager=entityManager;
+        this.entityManager=JPAConfig.getEntityManager();
     }
 
     public List<Specialiste> findAll(){
