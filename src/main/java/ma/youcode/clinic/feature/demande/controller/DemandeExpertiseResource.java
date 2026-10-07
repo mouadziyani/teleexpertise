@@ -46,7 +46,7 @@ public class DemandeExpertiseResource {
 
     @GET
     @RolesAllowed("SPECIALISTE")
-    public Response getSpecialisteDemande() {
+    public Response getSpecialisteDemande(@QueryParam("statut") String statut) {
         String specialisteUsername = securityContext.getUserPrincipal().getName();
 
         User specialiste = userRepository.findByUsername(specialisteUsername);
@@ -57,7 +57,7 @@ public class DemandeExpertiseResource {
                     .build();
         }
 
-        List<DemandeExpertise> specialisteDemandes = demandeExpertiseService.getSpecialisteDemande(specialiste.getId());
+        List<DemandeExpertise> specialisteDemandes = demandeExpertiseService.getSpecialisteDemande(specialiste.getId() , statut);
 
         return Response.status(Response.Status.OK)
                 .entity(specialisteDemandes)

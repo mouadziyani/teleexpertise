@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import ma.youcode.clinic.config.JPAConfig;
 import ma.youcode.clinic.model.entity.DemandeExpertise;
+import ma.youcode.clinic.model.enums.StatutDemande;
 
 import java.util.List;
 
@@ -47,6 +48,16 @@ public class DemandeExpertiseRepository {
                         DemandeExpertise.class
                 )
                 .setParameter("specialisteId", specialisteId)
+                .getResultList();
+    }
+
+    public List<DemandeExpertise> findBySpecialisteAndStatut(Long specialisteId , StatutDemande statut) {
+        return entityManager.createQuery(
+                        "SELECT d FROM DemandeExpertise d WHERE d.specialiste.userId = :specialisteId AND d.statut = :statut",
+                        DemandeExpertise.class
+                )
+                .setParameter("specialisteId", specialisteId)
+                .setParameter("statut", statut)
                 .getResultList();
     }
 }
