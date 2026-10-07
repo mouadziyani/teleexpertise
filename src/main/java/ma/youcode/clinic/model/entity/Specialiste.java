@@ -1,13 +1,6 @@
 package ma.youcode.clinic.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import ma.youcode.clinic.model.enums.Specialite;
 
 @Entity 
@@ -18,8 +11,9 @@ public class Specialiste {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userId", nullable = false)
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "specialite", nullable = false)
@@ -31,8 +25,8 @@ public class Specialiste {
     public Specialiste() {
     } 
 
-    public Specialiste(Long userId, Specialite specialite, Double tarif) {
-        this.userId = userId;
+    public Specialiste(User user, Specialite specialite, Double tarif) {
+        this.user = user;
         this.specialite = specialite;
         this.tarif = tarif;
     }
@@ -45,12 +39,12 @@ public class Specialiste {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUserId() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserId(User user) {
+        this.user = user;
     }
 
     public Specialite getSpecialite() {
