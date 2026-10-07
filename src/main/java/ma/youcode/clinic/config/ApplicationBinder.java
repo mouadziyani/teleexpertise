@@ -7,6 +7,7 @@ import ma.youcode.clinic.feature.consultation.repository.ConsultationRepository;
 import ma.youcode.clinic.feature.demande.repository.DemandeExpertiseRepository;
 import ma.youcode.clinic.feature.demande.service.DemandeExpertiseService;
 import ma.youcode.clinic.feature.specialiste.repository.SpecialisteRepository;
+import ma.youcode.clinic.feature.specialiste.service.SpecialisteService;
 
 public class ApplicationBinder extends AbstractBinder {
     @Override
@@ -25,6 +26,10 @@ public class ApplicationBinder extends AbstractBinder {
 
         bind(DemandeExpertiseService.class)
             .to(DemandeExpertiseService.class)
+            .in(Singleton.class);
+
+        bind(SpecialisteService.class)
+            .to(SpecialisteService.class)
             .in(Singleton.class);
     }
 }
