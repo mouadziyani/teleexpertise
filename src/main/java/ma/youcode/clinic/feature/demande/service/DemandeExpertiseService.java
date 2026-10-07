@@ -53,8 +53,8 @@ public class DemandeExpertiseService {
         return errors;
     }
 
-    public List<DemandeExpertise> getSpecialisteDemande(Long id) {
-        return demandeExpertiseRepository.findBySpecialiste(id);
+    public List<DemandeExpertise> getSpecialisteDemande(Long id , String status) {
+        return demandeExpertiseRepository.findBySpecialisteAndStatut(id , StatutDemande.valueOf(status));
     }
 
     private Map<String, String> validateCreateDemandeExpertise(CreateDemandeExpertiseRequestDTO requestDTO) {
