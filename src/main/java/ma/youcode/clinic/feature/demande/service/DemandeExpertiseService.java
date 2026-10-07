@@ -14,6 +14,7 @@ import ma.youcode.clinic.model.enums.StatutDemande;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Singleton
@@ -50,6 +51,10 @@ public class DemandeExpertiseService {
             }
         }
         return errors;
+    }
+
+    public List<DemandeExpertise> getSpecialisteDemande(Long id , String status) {
+        return demandeExpertiseRepository.findBySpecialisteAndStatut(id , StatutDemande.valueOf(status));
     }
 
     private Map<String, String> validateCreateDemandeExpertise(CreateDemandeExpertiseRequestDTO requestDTO) {
