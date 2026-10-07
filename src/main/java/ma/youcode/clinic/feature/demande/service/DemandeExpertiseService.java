@@ -38,8 +38,8 @@ public class DemandeExpertiseService {
                     requestDTO.getQuestion(),
                     Priorite.valueOf(requestDTO.getPriorite()),
                     StatutDemande.EN_ATTENTE,
-                    requestDTO.getAvis(),
-                    requestDTO.getRecommandations(),
+                    null,
+                    null,
                     LocalDateTime.now()
             );
 
@@ -81,14 +81,6 @@ public class DemandeExpertiseService {
 
         if (requestDTO.getPriorite() == null || requestDTO.getPriorite().trim().isEmpty()) {
             errors.put("priorite", "La priorité est obligatoire.");
-        }
-
-        if (requestDTO.getAvis() == null || requestDTO.getAvis().trim().isEmpty()) {
-            errors.put("avis", "L'avis est obligatoire.");
-        }
-
-        if (requestDTO.getRecommandations() == null || requestDTO.getRecommandations().trim().isEmpty()) {
-            errors.put("recommandations", "Les recommandations sont obligatoires.");
         }
 
         return errors;
