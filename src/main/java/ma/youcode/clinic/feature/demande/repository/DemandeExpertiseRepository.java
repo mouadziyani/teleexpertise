@@ -38,4 +38,11 @@ public class DemandeExpertiseRepository {
 
         return null;
     }
+
+    public DemandeExpertise findById(long id){
+        return entityManager.find(DemandeExpertise.class , id);
+    }
+    public void update(DemandeExpertise demande) {
+        entityManager.merge(demande);
+    }
 }
