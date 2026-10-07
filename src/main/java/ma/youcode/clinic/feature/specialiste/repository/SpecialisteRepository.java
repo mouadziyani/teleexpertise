@@ -30,4 +30,15 @@ public class SpecialisteRepository {
         Specialiste specialiste = entityManager.find(Specialiste.class, id);
         return specialiste;
     }
+
+    public Specialiste findByUserId(Long userId) {
+        return entityManager.createQuery(
+                        "SELECT s FROM Specialiste s WHERE s.user.id = :userId",
+                        Specialiste.class
+                )
+                .setParameter("userId", userId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
 }
