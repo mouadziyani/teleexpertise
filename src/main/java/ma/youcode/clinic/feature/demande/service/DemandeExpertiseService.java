@@ -43,7 +43,11 @@ public class DemandeExpertiseService {
                     LocalDateTime.now()
             );
 
-            demandeExpertiseRepository.save(demande);
+            DemandeExpertise createdDemande = demandeExpertiseRepository.save(demande);
+
+            if (createdDemande == null) {
+                errors.put("demande" , "Error demande ne creer pas en success reessayer une autre foit.");
+            }
         }
         return errors;
     }
