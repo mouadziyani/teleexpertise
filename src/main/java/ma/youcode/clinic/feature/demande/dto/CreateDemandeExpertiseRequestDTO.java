@@ -9,10 +9,6 @@ public class CreateDemandeExpertiseRequestDTO {
 
     private String priorite;
 
-    private String avis;
-
-    private String recommandations;
-
     public Long getConsultation_id() {
         return consultation_id;
     }
@@ -43,21 +39,5 @@ public class CreateDemandeExpertiseRequestDTO {
 
     public void setPriorite(String priorite) {
         this.priorite = priorite;
-    }
-
-    public String getAvis() {
-        return avis;
-    }
-
-    public void setAvis(String avis) {
-        this.avis = avis;
-    }
-
-    public String getRecommandations() {
-        return recommandations;
-    }
-
-    public void setRecommandations(String recommandations) {
-        this.recommandations = recommandations;
     }
 }
