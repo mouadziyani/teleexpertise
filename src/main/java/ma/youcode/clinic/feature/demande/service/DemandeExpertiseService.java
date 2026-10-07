@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import ma.youcode.clinic.feature.consultation.repository.ConsultationRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
+import ma.youcode.clinic.feature.demande.dto.RepondreDemandeDTO;
 import ma.youcode.clinic.feature.demande.repository.DemandeExpertiseRepository;
 import ma.youcode.clinic.feature.specialiste.repository.SpecialisteRepository;
 import ma.youcode.clinic.model.entity.Consultation;
@@ -91,4 +92,21 @@ public class DemandeExpertiseService {
         return errors;
     }
     
+    public void repondreDemande(Long demandeID , Long specialistID , RepondreDemandeDTO dto){
+        DemandeExpertise demande = demandeExpertiseRepository.findById(demandeID);
+        
+        if (demande == null) {
+            System.out.println("Demande non trouvée avec L'ID: " + demandeID);
+        }
+
+        if(!demande.getSpecialiste().getId().equals(specialistID)){
+            System.out.println("Vous n'êtes pas autorisé à répondre à cette demande.");
+        }
+
+        demande.setAvis(dto.getAvis());
+        demande.setRecommandations(dto.getRecommendation());
+        demande.setStatut(StatutDemande.TERMINEE);
+
+        demandeExpertiseRepository.update(demande);
+    }
 }
