@@ -1,5 +1,7 @@
 package ma.youcode.clinic.config;
 
+import jakarta.ws.rs.core.SecurityContext;
+import ma.youcode.clinic.feature.auth.repository.UserRepository;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import jakarta.inject.Singleton;
@@ -31,5 +33,13 @@ public class ApplicationBinder extends AbstractBinder {
         bind(SpecialisteService.class)
             .to(SpecialisteService.class)
             .in(Singleton.class);
+
+        bind(CustomSecurityContext.class)
+                .to(SecurityContext.class)
+                .in(Singleton.class);
+
+        bind(UserRepository.class)
+                .to(UserRepository.class)
+                .in(Singleton.class);
     }
 }

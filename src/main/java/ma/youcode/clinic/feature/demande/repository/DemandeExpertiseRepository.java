@@ -6,6 +6,8 @@ import jakarta.persistence.PersistenceContext;
 import ma.youcode.clinic.config.JPAConfig;
 import ma.youcode.clinic.model.entity.DemandeExpertise;
 
+import java.util.List;
+
 public class DemandeExpertiseRepository {
     @PersistenceContext
     private EntityManager entityManager;
@@ -37,5 +39,14 @@ public class DemandeExpertiseRepository {
         }
 
         return null;
+    }
+
+    public List<DemandeExpertise> findBySpecialiste(Long specialisteId) {
+        return entityManager.createQuery(
+                        "SELECT d FROM DemandeExpertise d WHERE d.specialiste.userId = :specialisteId",
+                        DemandeExpertise.class
+                )
+                .setParameter("specialisteId", specialisteId)
+                .getResultList();
     }
 }
