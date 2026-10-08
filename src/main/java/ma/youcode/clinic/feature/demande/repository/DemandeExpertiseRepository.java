@@ -59,7 +59,7 @@ public class DemandeExpertiseRepository {
 
     public List<DemandeExpertise> findBySpecialisteAndStatut(Long specialisteId , StatutDemande statut) {
         return entityManager.createQuery(
-                        "SELECT d FROM DemandeExpertise d WHERE d.specialiste.userId = :specialisteId AND d.statut = :statut",
+                        "SELECT d FROM DemandeExpertise d WHERE d.specialiste.user.id = :specialisteId AND d.statut = :statut",
                         DemandeExpertise.class
                 )
                 .setParameter("specialisteId", specialisteId)
