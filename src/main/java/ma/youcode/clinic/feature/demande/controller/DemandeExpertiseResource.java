@@ -45,42 +45,52 @@ public class DemandeExpertiseResource {
     }
 
     @GET
-    @RolesAllowed("SPECIALISTE")
-    public Response getSpecialisteDemande(@QueryParam("statut") String statut) {
-        String specialisteUsername = securityContext.getUserPrincipal().getName();
+    public Response getDemandes(@QueryParam("statut") String statut, @QueryParam("consultationId") Long consultationId) {
+        String username = securityContext.getUserPrincipal().getName();
 
-        User specialiste = userRepository.findByUsername(specialisteUsername);
+        User user = userRepository.findByUsername(username);
 
-        if (specialiste == null) {
+        if (user == null) {
             return Response.status(Response.Status.FORBIDDEN)
-                    .entity("Specialiste don't existe.")
+                    .entity("User doesn't exist.")
                     .build();
         }
 
-        List<DemandeExpertise> specialisteDemandes = demandeExpertiseService.getSpecialisteDemande(specialiste.getId() , statut);
+        // GENERALIST
+        if (consultationId != null) {
 
-        return Response.status(Response.Status.OK)
-                .entity(specialisteDemandes)
-                .build();
-    }
+            if (!securityContext.isUserInRole("GENERALIST")) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("Access denied.")
+                        .build();
+            }
 
-    @GET
-    @RolesAllowed("GENERALIST")
-    public Response getConsultationDemande(@QueryParam("consultationId") Long consultationId) {
-        String genralistUsername = securityContext.getUserPrincipal().getName();
+            List<DemandeExpertise> demandes =
+                    demandeExpertiseService.getConsultationDemande(consultationId);
 
-        User generalist = userRepository.findByUsername(genralistUsername);
-
-        if (generalist == null) {
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity("Specialiste don't existe.")
-                    .build();
+            return Response.ok(demandes).build();
         }
 
-        List<DemandeExpertise> consultationDemande = demandeExpertiseService.getConsultationDemande(consultationId);
+        // SPECIALISTE
+        if (statut != null) {
 
-        return Response.status(Response.Status.OK)
-                .entity(consultationDemande)
+            if (!securityContext.isUserInRole("SPECIALISTE")) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("Access denied.")
+                        .build();
+            }
+
+            List<DemandeExpertise> demandes =
+                    demandeExpertiseService.getSpecialisteDemande(
+                            user.getId(),
+                            statut
+                    );
+
+            return Response.ok(demandes).build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity("statut or consultationId is required.")
                 .build();
     }
 }
