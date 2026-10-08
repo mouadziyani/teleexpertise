@@ -1,10 +1,13 @@
 package ma.youcode.clinic.filter;
 
+import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import ma.youcode.clinic.config.CustomSecurityContext;
 import ma.youcode.clinic.feature.auth.repository.UserRepository;
 import ma.youcode.clinic.model.entity.User;
@@ -14,6 +17,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+@Provider
+@Priority(Priorities.AUTHENTICATION)
 public class BasicAuthFilter implements ContainerRequestFilter {
     @Inject
     private UserRepository userRepository;
