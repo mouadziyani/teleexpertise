@@ -3,11 +3,13 @@ package ma.youcode.clinic.feature.demande.controller;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import ma.youcode.clinic.feature.auth.repository.UserRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
+import ma.youcode.clinic.feature.demande.dto.RepondreDemandeDTO;
 import ma.youcode.clinic.feature.demande.service.DemandeExpertiseService;
 import ma.youcode.clinic.model.entity.DemandeExpertise;
 import ma.youcode.clinic.model.entity.User;
@@ -22,7 +24,7 @@ public class DemandeExpertiseResource {
     @Inject
     private DemandeExpertiseService demandeExpertiseService;
 
-    @Inject
+    @Context
     private SecurityContext securityContext;
 
     @Inject
@@ -92,5 +94,30 @@ public class DemandeExpertiseResource {
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity("statut or consultationId is required.")
                 .build();
+    }
+
+    @PUT
+    @Path("/{id}/reponse")
+    @RolesAllowed("SPECIALISTE")
+    public Response repondreDemande(
+            @PathParam("id") Long id ,RepondreDemandeDTO dto) {
+
+        String username = securityContext.getUserPrincipal().getName();
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("User doesn't exist.")
+                    .build();
+        }
+        try {
+            demandeExpertiseService.repondreDemande(id, user.getId(), dto);
+            return Response.ok("Reponse enregistree avec succees.").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (SecurityException e) {
+            return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur serveur").build();
+        }
     }
 }
