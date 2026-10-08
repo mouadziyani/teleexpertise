@@ -58,6 +58,10 @@ public class DemandeExpertiseService {
         return demandeExpertiseRepository.findBySpecialisteAndStatut(id , StatutDemande.valueOf(status));
     }
 
+    public List<DemandeExpertise> getConsultationDemande(Long id) {
+        return demandeExpertiseRepository.findByConsultation(id);
+    }
+
     private Map<String, String> validateCreateDemandeExpertise(CreateDemandeExpertiseRequestDTO requestDTO) {
         Map<String, String> errors = new LinkedHashMap<>();
 

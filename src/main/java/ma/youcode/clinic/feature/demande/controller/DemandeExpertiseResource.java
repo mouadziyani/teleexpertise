@@ -63,4 +63,24 @@ public class DemandeExpertiseResource {
                 .entity(specialisteDemandes)
                 .build();
     }
+
+    @GET
+    @RolesAllowed("GENERALIST")
+    public Response getConsultationDemande(@QueryParam("consultationId") Long consultationId) {
+        String genralistUsername = securityContext.getUserPrincipal().getName();
+
+        User generalist = userRepository.findByUsername(genralistUsername);
+
+        if (generalist == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("Specialiste don't existe.")
+                    .build();
+        }
+
+        List<DemandeExpertise> consultationDemande = demandeExpertiseService.getConsultationDemande(consultationId);
+
+        return Response.status(Response.Status.OK)
+                .entity(consultationDemande)
+                .build();
+    }
 }

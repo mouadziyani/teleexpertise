@@ -50,9 +50,20 @@ public class DemandeExpertiseRepository {
                 .setParameter("specialisteId", specialisteId)
                 .getResultList();
     }
+
+    public List<DemandeExpertise> findByConsultation(Long consultationId) {
+        return entityManager.createQuery(
+                        "SELECT d FROM DemandeExpertise d WHERE d.consultation.id = :consultationId",
+                        DemandeExpertise.class
+                )
+                .setParameter("consultationId", consultationId)
+                .getResultList();
+    }
+
     public DemandeExpertise findById(long id){
         return entityManager.find(DemandeExpertise.class , id);
     }
+
     public void update(DemandeExpertise demande) {
         entityManager.merge(demande);
     }
