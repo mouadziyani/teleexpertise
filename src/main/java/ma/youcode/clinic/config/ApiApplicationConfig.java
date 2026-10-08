@@ -9,9 +9,10 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 public class ApiApplicationConfig extends ResourceConfig {
 
     public ApiApplicationConfig() {
+        register(new ApplicationBinder());
+
         packages("ma.youcode.clinic");
 
-        register(new ApplicationBinder());
         register(JacksonJsonProvider.class);
         register(RolesAllowedDynamicFeature.class);
     }
