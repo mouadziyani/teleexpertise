@@ -5,7 +5,7 @@ import jakarta.inject.Singleton;
 import ma.youcode.clinic.feature.consultation.repository.ConsultationRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
 import ma.youcode.clinic.feature.demande.dto.RepondreDemandeDTO;
-import ma.youcode.clinic.feature.demande.dto.SpecialisteDemandeResponceDTO;
+import ma.youcode.clinic.feature.demande.dto.DemandeResponceDTO;
 import ma.youcode.clinic.feature.demande.repository.DemandeExpertiseRepository;
 import ma.youcode.clinic.feature.specialiste.repository.SpecialisteRepository;
 import ma.youcode.clinic.model.entity.Consultation;
@@ -115,8 +115,8 @@ public class DemandeExpertiseService {
         demandeExpertiseRepository.update(demande);
     }
 
-    public SpecialisteDemandeResponceDTO createSpecialisteResponce(DemandeExpertise demande) {
-        return new SpecialisteDemandeResponceDTO(
+    public DemandeResponceDTO createDemandeResponce(DemandeExpertise demande) {
+        return new DemandeResponceDTO(
                 demande.getId(),
                 demande.getConsultation().getId(),
                 demande.getSpecialiste().getId(),

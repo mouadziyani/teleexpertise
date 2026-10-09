@@ -5,7 +5,7 @@ import ma.youcode.clinic.model.enums.StatutDemande;
 
 import java.time.LocalDateTime;
 
-public class SpecialisteDemandeResponceDTO {
+public class DemandeResponceDTO {
     private Long id;
     private Long consultationId;
     private Long specialisteId;
@@ -16,10 +16,10 @@ public class SpecialisteDemandeResponceDTO {
     private String recommandations;
     private LocalDateTime dateCreation;
 
-    public SpecialisteDemandeResponceDTO() {
+    public DemandeResponceDTO() {
     }
 
-    public SpecialisteDemandeResponceDTO(
+    public DemandeResponceDTO(
             Long id,
             Long consultationId,
             Long specialisteId,

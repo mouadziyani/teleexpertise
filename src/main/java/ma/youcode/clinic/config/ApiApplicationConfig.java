@@ -1,7 +1,6 @@
 package ma.youcode.clinic.config;
 
 import jakarta.ws.rs.ApplicationPath;
-import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
@@ -13,7 +12,7 @@ public class ApiApplicationConfig extends ResourceConfig {
 
         packages("ma.youcode.clinic");
 
-        register(JacksonJsonProvider.class);
+        register(JacksonConfig.class);
         register(RolesAllowedDynamicFeature.class);
     }
 }
