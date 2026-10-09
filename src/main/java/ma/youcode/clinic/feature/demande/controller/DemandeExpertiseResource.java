@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import ma.youcode.clinic.feature.auth.repository.UserRepository;
 import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
+import ma.youcode.clinic.feature.demande.dto.DemandeResponceDTO;
 import ma.youcode.clinic.feature.demande.dto.RepondreDemandeDTO;
 import ma.youcode.clinic.feature.demande.service.DemandeExpertiseService;
 import ma.youcode.clinic.model.entity.DemandeExpertise;
@@ -33,6 +34,16 @@ public class DemandeExpertiseResource {
     @POST
     @RolesAllowed("GENERALIST")
     public Response createDemande(CreateDemandeExpertiseRequestDTO requestDTO) {
+        String username = securityContext.getUserPrincipal().getName();
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Map.of("success", false, "message", "User doesn't exist."))
+                    .build();
+        }
+
         Map<String, String> errors = demandeExpertiseService.creatDemande(requestDTO);
 
         if (!errors.isEmpty()) {
@@ -51,8 +62,7 @@ public class DemandeExpertiseResource {
     }
 
     @GET
-    public Response getDemandes(@QueryParam("statut") String statut,
-            @QueryParam("consultationId") Long consultationId) {
+    public Response getDemandes(@QueryParam("statut") String statut, @QueryParam("consultationId") Long consultationId) {
         String username = securityContext.getUserPrincipal().getName();
 
         User user = userRepository.findByUsername(username);
@@ -76,7 +86,11 @@ public class DemandeExpertiseResource {
 
             List<DemandeExpertise> demandes = demandeExpertiseService.getConsultationDemande(consultationId);
 
-            return Response.ok(demandes).build();
+            List<DemandeResponceDTO> responce = demandes.stream()
+                    .map(d -> demandeExpertiseService.createDemandeResponce(d))
+                    .toList();
+
+            return Response.ok(responce).build();
         }
 
         // SPECIALISTE
@@ -92,7 +106,11 @@ public class DemandeExpertiseResource {
                     user.getId(),
                     statut);
 
-            return Response.ok(demandes).build();
+            List<DemandeResponceDTO> responce = demandes.stream()
+                    .map(d -> demandeExpertiseService.createDemandeResponce(d))
+                    .toList();
+
+            return Response.ok(responce).build();
         }
 
         return Response.status(Response.Status.BAD_REQUEST)
