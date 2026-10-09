@@ -14,7 +14,7 @@ public class SpecialisteService {
     @Inject 
     public SpecialisteRepository repository ;
 
-    public List<Specialiste> listSpesialiste(Specialite specialite , String tarif){
+    public List<Specialiste> listSpesialiste(Specialite specialite){
 
         List<Specialiste> s = new ArrayList<>();
 
@@ -24,13 +24,8 @@ public class SpecialisteService {
             s = repository.findAll();
         }
 
-
-        if ("tarif".equalsIgnoreCase(tarif)) {
-            return s.stream()
-                    .sorted((s1,s2)->s1.getTarif().compareTo(s2.getTarif()))
-                    .toList();
-        }
-
-        return s ;
+        return s.stream()
+                .sorted((s1,s2)->s1.getTarif().compareTo(s2.getTarif()))
+                .toList() ;
     }
 }
