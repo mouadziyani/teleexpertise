@@ -1,0 +1,18 @@
+package ma.youcode.clinic.config;
+
+import jakarta.ws.rs.ApplicationPath;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+
+@ApplicationPath("/api")
+public class ApiApplicationConfig extends ResourceConfig {
+
+    public ApiApplicationConfig() {
+        register(new ApplicationBinder());
+
+        packages("ma.youcode.clinic");
+
+        register(JacksonConfig.class);
+        register(RolesAllowedDynamicFeature.class);
+    }
+}

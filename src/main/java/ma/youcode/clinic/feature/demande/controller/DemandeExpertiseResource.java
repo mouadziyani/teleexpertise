@@ -1,0 +1,150 @@
+package ma.youcode.clinic.feature.demande.controller;
+
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import ma.youcode.clinic.feature.auth.repository.UserRepository;
+import ma.youcode.clinic.feature.demande.dto.CreateDemandeExpertiseRequestDTO;
+import ma.youcode.clinic.feature.demande.dto.DemandeResponceDTO;
+import ma.youcode.clinic.feature.demande.dto.RepondreDemandeDTO;
+import ma.youcode.clinic.feature.demande.service.DemandeExpertiseService;
+import ma.youcode.clinic.model.entity.DemandeExpertise;
+import ma.youcode.clinic.model.entity.User;
+
+import java.util.List;
+import java.util.Map;
+
+@Path("/demande")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class DemandeExpertiseResource {
+    @Inject
+    private DemandeExpertiseService demandeExpertiseService;
+
+    @Context
+    private SecurityContext securityContext;
+
+    @Inject
+    private UserRepository userRepository;
+
+    @POST
+    @RolesAllowed("GENERALIST")
+    public Response createDemande(CreateDemandeExpertiseRequestDTO requestDTO) {
+        String username = securityContext.getUserPrincipal().getName();
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Map.of("success", false, "message", "User doesn't exist."))
+                    .build();
+        }
+
+        Map<String, String> errors = demandeExpertiseService.creatDemande(requestDTO);
+
+        if (!errors.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of(
+                            "success", false,
+                            "errors", errors))
+                    .build();
+        }
+
+        return Response.status(Response.Status.CREATED)
+                .entity(Map.of(
+                        "success", true,
+                        "message", "Demande created with success."))
+                .build();
+    }
+
+    @GET
+    public Response getDemandes(@QueryParam("statut") String statut, @QueryParam("consultationId") Long consultationId) {
+        String username = securityContext.getUserPrincipal().getName();
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Map.of("success", false, "message", "User doesn't exist."))
+                    .build();
+        }
+
+        // GENERALIST
+        if (consultationId != null) {
+
+            if (!securityContext.isUserInRole("GENERALIST")) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity(Map.of(
+                                "success", false,
+                                "message", "Access denied."))
+                        .build();
+            }
+
+            List<DemandeExpertise> demandes = demandeExpertiseService.getConsultationDemande(consultationId);
+
+            List<DemandeResponceDTO> responce = demandes.stream()
+                    .map(d -> demandeExpertiseService.createDemandeResponce(d))
+                    .toList();
+
+            return Response.ok(responce).build();
+        }
+
+        // SPECIALISTE
+        if (statut != null) {
+
+            if (!securityContext.isUserInRole("SPECIALISTE")) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity(Map.of("success", false, "message", "User doesn't exist."))
+                        .build();
+            }
+
+            List<DemandeExpertise> demandes = demandeExpertiseService.getSpecialisteDemande(
+                    user.getId(),
+                    statut);
+
+            List<DemandeResponceDTO> responce = demandes.stream()
+                    .map(d -> demandeExpertiseService.createDemandeResponce(d))
+                    .toList();
+
+            return Response.ok(responce).build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity(Map.of(
+                        "success", false,
+                        "message", "statut or consultationId is required."))
+                .build();
+    }
+
+    @PUT
+    @Path("/{id}/reponse")
+    @RolesAllowed("SPECIALISTE")
+    public Response repondreDemande(
+            @PathParam("id") Long id, RepondreDemandeDTO dto) {
+
+        String username = securityContext.getUserPrincipal().getName();
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Map.of("success", false, "message", "User doesn't exist."))
+                    .build();
+        }
+        try {
+            demandeExpertiseService.repondreDemande(id, user.getId(), dto);
+            return Response.ok(Map.of("success", true, "message", "Réponse enregistrée avec succès.")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("success", false, "message", e.getMessage())).build();
+        } catch (SecurityException e) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(Map.of("success", false, "message", e.getMessage())).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("success", false, "message", "Erreur serveur.")).build();
+        }
+    }
+}
